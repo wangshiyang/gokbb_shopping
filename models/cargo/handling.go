@@ -2,8 +2,8 @@ package cargo
 
 import (
 	"shawn/gokbb_shopping/models/location"
-	"github.com/go-kit/kit/examples/shipping/voyage"
 	"errors"
+	"time"
 )
 
 const (
@@ -25,7 +25,7 @@ type HandlingEvent struct {
 type HandlingActivity struct {
 	Type         HandlingTypeEvent
 	Location     location.UNLocode
-	VoyageNumber voyage.Number
+	VoyageNumber Number
 }
 
 func (t HandlingTypeEvent) String() string {
@@ -51,6 +51,17 @@ type HandlingHistory struct {
 	HandlingEvent []HandlingEvent
 }
 
+type HandlingEventRepository interface {
+	Store(e HandlingEvent)
+	QueryHandlingHistory(TrackingID) HandlingHistory
+}
+
+type HandlingEventFactory struct {
+	CargoRepository    CargoRepository
+	VoyageRepository   VoyageRepository
+	LocationRepository location.LocationRepository
+}
+
 func (h HandlingHistory) MostRecentlyCompletedEvent() (HandlingEvent, error) {
 	if len(h.HandlingEvent) == 0 {
 		return HandlingEvent{}, errors.New("delivery history is empty")
@@ -59,4 +70,29 @@ func (h HandlingHistory) MostRecentlyCompletedEvent() (HandlingEvent, error) {
 	return h.HandlingEvent[len(h.HandlingEvent)-1], nil
 }
 
+func (f *HandlingEventFactory) CreateHandlingEvent(registered time.Time, completed time.Time, id TrackingID,
+	voyageId Number, unlocode location.UNLocode, eventType HandlingTypeEvent) (HandlingEvent, error) {
+	if _, err := f.CargoRepository.Find(id); err != nil {
+		return HandlingEvent{}, err
+	}
 
+	if _, err := f.VoyageRepository.Find(voyageId); err != nil {
+		if len(voyageId) > 0 {
+			return HandlingEvent{}, err
+		}
+	}
+
+	if _, err := f.LocationRepository.Find(unlocode); err != nil {
+		return HandlingEvent{}, err
+	}
+
+	return HandlingEvent{
+		TrackingID: id,
+		Activity: HandlingActivity{
+			Type:         eventType,
+			Location:     unlocode,
+			VoyageNumber: voyageId,
+		},
+	}, nil
+
+}

@@ -26,6 +26,10 @@ type CarrierMovement struct {
 
 var ErrUnknown = errors.New("unknow voyage")
 
-type Repository interface {
+func New(n Number, s Schedule) *Voyage {
+	return &Voyage{Number: n, Schedule: s}
+}
+
+type VoyageRepository interface {
 	Find(Number) (*Voyage, error)
 }

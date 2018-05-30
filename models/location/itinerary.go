@@ -1,13 +1,12 @@
 package location
 
 import (
-	"github.com/go-kit/kit/examples/shipping/location"
 	"time"
 )
 
 type Leg struct {
-	LoadLocation   location.UNLocode
-	UnLoadLocation location.UNLocode
+	LoadLocation   UNLocode
+	UnLoadLocation UNLocode
 	LoadTime       time.Time
 	UnLoadTime     time.Time
 }
@@ -16,17 +15,17 @@ type Itinerary struct {
 	Legs []Leg `json:"legs"`
 }
 
-func (i Itinerary) InitialDepartureLocation() location.UNLocode {
+func (i Itinerary) InitialDepartureLocation() UNLocode {
 	if i.IsEmpty(){
-		return  location.UNLocode("")
+		return  UNLocode("")
 	}
 
 	return i.Legs[0].LoadLocation
 }
 
-func (i Itinerary) FinalArrivalLocation() location.UNLocode {
+func (i Itinerary) FinalArrivalLocation() UNLocode {
 	if i.IsEmpty() {
-		return location.UNLocode("")
+		return UNLocode("")
 	}
 
 	return i.Legs[0].UnLoadLocation

@@ -11,7 +11,7 @@ type Location struct {
 
 var ErrUnknown = errors.New("unknown location")
 
-type Repository interface {
+type LocationRepository interface {
 	Find(locode UNLocode) (*Location, error)
 	FindAll() []*Location
 }

@@ -1,13 +1,12 @@
 package cargo
 
 import (
-	"shawn/gokbb_shopping/models"
-	"shawn/gokbb_shopping/models/location"
+	"gokbb_shopping/models"
+	"gokbb_shopping/models/location"
 )
 
 type Delivery struct {
 	models.Model
-	Itinerary location.Itinerary
+	Itinerary          location.Itinerary
 	RouteSpecification RouteSpecification
-
 }

@@ -1,8 +1,8 @@
 package cargo
 
 import (
-	"shawn/gokbb_shopping/models/location"
 	"errors"
+	"gokbb_shopping/models/location"
 	"time"
 )
 

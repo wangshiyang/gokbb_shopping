@@ -1,11 +1,11 @@
 package models
 
 import (
-	"github.com/jinzhu/gorm"
-	"time"
 	"fmt"
+	"github.com/jinzhu/gorm"
+	"gokbb_shopping/common/setting"
 	"log"
-	"shawn/gokbb_shopping/common/setting"
+	"time"
 )
 
 var db *gorm.DB
@@ -41,13 +41,13 @@ func createCallback(scope *gorm.Scope) {
 	}
 }
 
-func updateCallback(scope *gorm.Scope)  {
+func updateCallback(scope *gorm.Scope) {
 	if _, ok := scope.Get("gorm:update_column"); ok {
 		scope.SetColumn("ModifiedOn", time.Now().Unix())
 	}
 }
 
-func deletedCallback(scope *gorm.Scope)  {
+func deletedCallback(scope *gorm.Scope) {
 	if !scope.HasError() {
 		var extraOption string
 		if str, ok := scope.Get("gorm:delete_option"); ok {
@@ -88,9 +88,9 @@ func addExtraSpaceIfExist(str string) string {
 	return ""
 }
 
-func init()  {
+func init() {
 	var (
-		err error
+		err                                               error
 		dbType, dbName, user, password, host, tablePrefix string
 	)
 
@@ -117,7 +117,7 @@ func init()  {
 	}
 
 	gorm.DefaultTableNameHandler = func(db *gorm.DB, defaultTableName string) string {
-		return tablePrefix + defaultTableName;
+		return tablePrefix + defaultTableName
 	}
 
 	db.SingularTable(true)
@@ -129,6 +129,6 @@ func init()  {
 	db.Callback().Delete().Register("gorm:delete", deletedCallback)
 }
 
-func CloseDB()  {
+func CloseDB() {
 	defer db.Close()
 }

@@ -1,8 +1,8 @@
 package cargo
 
 import (
-	"shawn/gokbb_shopping/models"
-	"shawn/gokbb_shopping/models/location"
+	"gokbb_shopping/models"
+	"gokbb_shopping/models/location"
 	"time"
 )
 
@@ -57,7 +57,7 @@ func (s RoutingStatus) String() string {
 type TransprotStatus int
 
 const (
-	NotReceived    TransprotStatus = iota
+	NotReceived TransprotStatus = iota
 	InPort
 	OnboardCarrier
 	Claimed
